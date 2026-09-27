@@ -1,0 +1,224 @@
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+
+export type Locale = 'id' | 'en';
+
+const en: Record<string, string> = {
+  'Ceritanya': 'The story',
+  'Cara kerja': 'How it works',
+  'Untuk tim': 'For the team',
+  'Jadwalkan Demo': 'Book a Demo',
+  'Buka menu': 'Open menu',
+  'Tutup menu': 'Close menu',
+  'Pilih bahasa': 'Choose language',
+  'Navigasi utama': 'Main navigation',
+  'Navigasi mobile': 'Mobile navigation',
+  'AlumiFlow, kembali ke atas': 'AlumiFlow, back to top',
+  'Langsung ke konten': 'Skip to content',
+  'Pilot terbatas untuk workshop kaca & aluminium': 'Limited pilot for glass & aluminium workshops',
+  'Satu order.': 'One order.',
+  'Banyak langkah.': 'Many steps.',
+  'Satu flow.': 'One flow.',
+  'Dari pesan pertama pelanggan sampai pembayaran selesai, AlumiFlow membantu tim kantor dan lapangan mengikuti pekerjaan yang sama.': 'From the first customer message to the final payment, AlumiFlow helps office and field teams follow the same job.',
+  'Lihat alurnya': 'Explore the flow',
+  'Ikuti ceritanya': 'Follow the story',
+  'Kenalan dengan AlumiFlow lewat demo singkat': 'Get to know AlumiFlow through a short demo',
+  'Informasi tetap terhubung': 'Information stays connected',
+  'Overview': 'Overview',
+  'SIMULASI SATU PEKERJAAN': 'ONE JOB · INTERACTIVE PREVIEW',
+  'Satu pekerjaan, langkahnya terlihat jelas.': 'One job. Every step in view.',
+  'Customer & kebutuhan': 'Customer & needs',
+  'Survei & pengukuran': 'Survey & measurements',
+  'Penawaran & persetujuan': 'Quote & approval',
+  'Pekerjaan & pemasangan': 'Job & installation',
+  'Kebutuhan dicatat, survei dijadwalkan.': 'Needs are captured and the survey is scheduled.',
+  'Ukuran, lokasi, dan foto masuk ke pekerjaan.': 'Measurements, location, and photos join the job.',
+  'Hasil survei menjadi penawaran untuk disetujui.': 'Survey findings become a quote for approval.',
+  'Tim lapangan melanjutkan pekerjaan dan bukti pemasangan.': 'The field team handles the job and installation evidence.',
+  'Selesai': 'Completed',
+  'Sedang berjalan': 'In progress',
+  'Berikutnya': 'Up next',
+  'Pilih tahap untuk melihat alurnya': 'Choose a step to explore the flow',
+  'Jeda animasi': 'Pause animation',
+  'Putar animasi': 'Play animation',
+  'Dari kantor ke lapangan': 'From office to field',
+  'ILUSTRASI PRODUK': 'PRODUCT ILLUSTRATION',
+  'Bab 01 · Yang sering terjadi': 'Chapter 01 · The familiar problem',
+  'Order masuk. Lalu ceritanya terpecah.': 'An order arrives. Then its story gets scattered.',
+  'Satu pekerjaan melewati banyak tangan. Saat informasinya tercecer, setiap orang perlu menyusun ulang apa yang sebenarnya terjadi.': 'One job passes through many hands. When details are scattered, everyone has to piece its story together again.',
+  'Bagaimana kalau satu pekerjaan punya alur yang bisa diikuti bersama?': 'What if everyone could follow the same job from start to finish?',
+  'Informasi tersebar': 'Details are scattered',
+  'Chat pelanggan, ukuran, foto, dan jadwal ada di tempat berbeda. Tim harus mencari ulang konteks pekerjaan.': 'Customer chats, measurements, photos, and schedules live in different places. The team has to hunt for context.',
+  'Proses sulit diikuti': 'Progress is hard to follow',
+  'Hasil survei sudah ada, tetapi langkah menuju penawaran, pekerjaan, dan pemasangan belum terlihat jelas.': 'The survey is done, but the route to quoting, production, and installation is still unclear.',
+  'Owner harus mengejar update': 'Owners chase updates',
+  'Status tugas, kendala lapangan, material, dan tagihan membutuhkan banyak konfirmasi manual.': 'Task status, field issues, materials, and invoices require repeated manual follow-ups.',
+  'Bab 03 · Yang ikut terhubung': 'Chapter 03 · The details that connect',
+  'Cerita yang utuh butuh detail yang tepat.': 'A complete story needs the right details.',
+  'Dari kebutuhan awal sampai tagihan, tiap bagian punya informasi yang dibutuhkan tim untuk melanjutkan pekerjaan.': 'From the first request to the invoice, each step carries the information the team needs to move forward.',
+  'Lihat dalam demo': 'See it in a demo',
+  'Customer & survei': 'Customer & survey',
+  'Mulai dari kebutuhan pelanggan, jadwal kunjungan, dan hasil survei yang bisa ditindaklanjuti.': 'Start with customer needs, site visit schedules, and survey findings the team can act on.',
+  'Ukuran & dokumentasi': 'Measurements & documentation',
+  'Catat pengukuran, lokasi, catatan, dan foto bersama konteks pekerjaan yang tepat.': 'Keep measurements, locations, notes, and photos with the right job.',
+  'Teruskan hasil survei menjadi penawaran dan ketahui kapan pekerjaan siap dilanjutkan.': 'Turn survey findings into a quote and see when the job is ready to move ahead.',
+  'Job & instalasi': 'Job & installation',
+  'Koordinasikan tugas, progres, kendala, dan bukti pemasangan dari tim lapangan.': 'Coordinate tasks, progress, issues, and installation evidence from the field.',
+  'Material & pembelian': 'Materials & purchasing',
+  'Hubungkan kebutuhan material dengan perencanaan dan aktivitas pekerjaan workshop.': 'Connect material needs to planning and workshop activity.',
+  'Tagihan & pembayaran': 'Invoicing & payments',
+  'Ikuti pekerjaan hingga invoice, payment, dan gambaran operasional yang lebih jelas.': 'Follow the job through invoicing and payment with a clearer operational picture.',
+  'Pertanyaan umum': 'Frequently asked questions',
+  'Kenalan dulu dengan AlumiFlow.': 'Get to know AlumiFlow.',
+  'Apakah AlumiFlow sudah bisa dicoba?': 'Can I try AlumiFlow?',
+  'AlumiFlow sedang membuka pilot terbatas. Jadwalkan demo agar kami bisa memahami alur workshopmu dan menjelaskan proses uji coba yang tersedia.': 'AlumiFlow is opening a limited pilot. Book a demo so we can learn about your workflow and explain the available trial process.',
+  'Apakah tim lapangan harus selalu online?': 'Does the field team need to stay online?',
+  'AlumiFlow Field mendukung pencatatan aktivitas tertentu ketika koneksi terbatas. Data yang menunggu dapat disinkronkan setelah koneksi kembali.': 'AlumiFlow Field can record certain activities with limited connectivity. Pending data can sync when the connection returns.',
+  'Apakah ada harga langganan?': 'Is subscription pricing available?',
+  'Skema pilot dan kebutuhan workshop dibahas saat demo. Informasi paket akan dijelaskan sebelum kamu memutuskan untuk bergabung.': 'We discuss the pilot and your workshop needs during the demo. Package details are explained before you decide to join.',
+  'Siapa yang menggunakan AlumiFlow Field?': 'Who uses AlumiFlow Field?',
+  'Surveyor dan installer memakai aplikasi Field untuk melihat tugas dan mencatat hasil pekerjaan di lapangan. Pengelolaan operasional dilakukan melalui web.': 'Surveyors and installers use the Field app to view assignments and record results on site. Office operations are managed on the web.',
+  'Mulai dari obrolan': 'Start with a conversation',
+  'Lihat bagaimana AlumiFlow cocok dengan cara kerja workshopmu.': 'See how AlumiFlow fits your workshop.',
+  'Ceritakan sedikit kebutuhanmu. Kami akan menyiapkan percakapan awal dan menunjukkan alur yang relevan.': 'Tell us a little about your needs. We will prepare an initial conversation and show a relevant workflow.',
+  'Meminta demo tidak berarti kamu harus langsung berlangganan.': 'A demo request does not commit you to a subscription.',
+  'Permintaan demo': 'Demo request',
+  'Nama kamu': 'Your name',
+  'Nama lengkap': 'Full name',
+  'Nama workshop': 'Workshop name',
+  'Nama usaha': 'Business name',
+  'Nomor WhatsApp': 'WhatsApp number',
+  'Nomor yang bisa dihubungi': 'A number we can reach',
+  'Kota': 'City',
+  'Kota operasional': 'Where you operate',
+  'Yang ingin kamu rapikan': 'What you want to improve',
+  'Contoh: survei, penawaran, atau instalasi': 'For example: surveys, quotes, or installations',
+  'Isi data singkat, lalu lanjutkan permintaan demo melalui WhatsApp.': 'Fill in a few details, then continue your demo request through WhatsApp.',
+  'Kontak demo belum tersedia. Silakan coba kembali setelah pendaftaran dibuka.': 'The demo contact is not available yet. Please try again when registration opens.',
+  'WhatsApp terbuka dengan pesan permintaan demo. Tekan Kirim untuk menghubungi tim kami.': 'WhatsApp opened with your demo request. Press Send to contact our team.',
+  'Halo tim AlumiFlow, saya ingin menjadwalkan demo.': 'Hello AlumiFlow team, I would like to book a demo.',
+  'Nama:': 'Name:',
+  'Workshop:': 'Workshop:',
+  'Nomor WhatsApp:': 'WhatsApp number:',
+  'Kota:': 'City:',
+  'Kebutuhan:': 'Needs:',
+  'Belum diisi': 'Not provided',
+  'Operasional yang lebih jelas untuk usaha kaca dan aluminium.': 'Clearer operations for glass and aluminium workshops.',
+  'Kembali ke atas ↑': 'Back to top ↑',
+  'Semua hak dilindungi.': 'All rights reserved.',
+  'Customer · Survey · Job · Payment': 'Customer · Survey · Job · Payment',
+  'BAB 02 · BAGAIMANA ALUMIFLOW BEKERJA': 'CHAPTER 02 · HOW ALUMIFLOW WORKS',
+  'Ikuti satu pekerjaan': 'Follow one job',
+  'sampai tuntas.': 'all the way through.',
+  'Gulir perlahan. Setiap bab menunjukkan bagaimana informasi bergerak dari satu tangan ke tangan berikutnya.': 'Scroll through the chapters to see how information moves from one person to the next.',
+  'ALUR PEKERJAAN': 'JOB FLOW',
+  'ILUSTRASI ALUR': 'WORKFLOW ILLUSTRATION',
+  'SATU PEKERJAAN · DARI AWAL SAMPAI AKHIR': 'ONE JOB · FROM START TO FINISH',
+  'Langkah berikutnya': 'The next step',
+  'selalu terlihat.': 'is always in view.',
+  'Sudah dilalui': 'Completed',
+  'Sedang diceritakan': 'Current chapter',
+  'Tahap berikutnya': 'Up next',
+  'Pilih bab cerita': 'Choose a story chapter',
+  'Delapan tahap.': 'Eight stages.',
+  'Satu cerita yang tersambung.': 'One connected story.',
+  'Lihat dari sisi tim': 'See the team perspective',
+  '01 / KEBUTUHAN': '01 / THE REQUEST',
+  'Semua dimulai dari cerita pelanggan.': 'It starts with the customer’s story.',
+  'Customer menghubungi workshop. Kebutuhan awal dicatat dan survei dijadwalkan. Saat surveyor berangkat, konteks pekerjaan sudah ikut dengannya.': 'A customer contacts the workshop. Their needs are captured and a survey is scheduled. The surveyor heads out with the job context in hand.',
+  'Customer → Survey': 'Customer → Survey',
+  'Kebutuhan, lokasi, dan jadwal berada dalam konteks yang sama.': 'Needs, location, and schedule stay in the same context.',
+  'Customer': 'Customer',
+  'Survey': 'Survey',
+  '02 / KEPUTUSAN': '02 / THE DECISION',
+  'Hasil lapangan menjadi keputusan yang jelas.': 'Field findings become a clear decision.',
+  'Ukuran, foto, dan catatan survei diteruskan menjadi penawaran. Setelah disetujui, tim tahu kapan pekerjaan bisa dimulai.': 'Measurements, photos, and survey notes feed into a quote. Once approved, the team knows when work can begin.',
+  'Quotation → Approval': 'Quote → Approval',
+  'Penawaran punya dasar dari pengukuran dan dokumentasi.': 'The quote is grounded in measurements and documentation.',
+  'Quotation': 'Quote',
+  'Approval': 'Approval',
+  '03 / EKSEKUSI': '03 / EXECUTION',
+  'Tim lapangan tahu apa yang harus dikerjakan.': 'The field team knows what to do.',
+  'Job, kebutuhan material, jadwal, dan instalasi terhubung. Tim mencatat progres, kendala, dan bukti kerja melalui AlumiFlow Field.': 'Jobs, material needs, schedules, and installations stay connected. The team records progress, issues, and evidence through AlumiFlow Field.',
+  'Job → Installation': 'Job → Installation',
+  'Kabar dari lapangan kembali ke alur pekerjaan yang sama.': 'Field updates return to the same job flow.',
+  'Job': 'Job',
+  'Installation': 'Installation',
+  '04 / PENYELESAIAN': '04 / COMPLETION',
+  'Pekerjaan selesai. Ceritanya tetap utuh.': 'The work is done. The story stays intact.',
+  'Setelah pekerjaan diverifikasi, tim melanjutkan ke invoice dan memantau pembayaran dengan jejak proses yang masih bisa diikuti.': 'Once the job is verified, the team can issue an invoice and track payment with the full process still in view.',
+  'Invoice → Payment': 'Invoice → Payment',
+  'Status pekerjaan dan tagihan dapat ditelusuri bersama.': 'Job and invoice status can be traced together.',
+  'Invoice': 'Invoice',
+  'Payment': 'Payment',
+  'BAB 04 · DARI DUA SISI': 'CHAPTER 04 · TWO PERSPECTIVES',
+  'Dua cara mengalaminya.': 'Two ways to experience it.',
+  'Pilih sudut pandang': 'Choose a perspective',
+  'Owner & kantor': 'Owner & office',
+  'Tim lapangan': 'Field team',
+  'UNTUK OWNER & TIM KANTOR': 'FOR OWNERS & OFFICE TEAMS',
+  'Lihat pekerjaan tanpa harus menebak-nebak.': 'Follow work without the guesswork.',
+  'Dari permintaan pelanggan sampai tagihan, informasi penting punya tempatnya. Kamu bisa mengikuti progres dan menentukan langkah berikutnya dengan konteks yang lebih jelas.': 'From customer requests to invoices, important details have a place. Follow progress and decide what comes next with clearer context.',
+  'Prioritas terlihat': 'See what needs attention',
+  'Tahu pekerjaan mana yang menunggu tindakan.': 'Know which jobs are waiting for action.',
+  'Konteks tersambung': 'Keep the context connected',
+  'Survei, penawaran, dan job berada dalam alur yang sama.': 'Surveys, quotes, and jobs share one flow.',
+  'Penutupan rapi': 'Close the loop',
+  'Instalasi, invoice, dan pembayaran dapat diikuti.': 'Follow installations, invoices, and payments.',
+  'UNTUK SURVEYOR & INSTALLER': 'FOR SURVEYORS & INSTALLERS',
+  'Berangkat dengan tugas yang lebih jelas.': 'Head out with a clearer assignment.',
+  'AlumiFlow Field membawa detail pekerjaan ke lapangan. Tim dapat melihat tugas, mencatat ukuran, foto, kendala, dan hasil kerja; aktivitas tertentu tetap bisa dicatat saat koneksi terbatas.': 'AlumiFlow Field brings job details on site. The team can see assignments and record measurements, photos, issues, and results; certain activities can be captured with limited connectivity.',
+  'Tugas di tangan': 'Assignments in hand',
+  'Lokasi, jadwal, dan konteks pekerjaan mudah diakses.': 'Location, schedule, and job context are easy to reach.',
+  'Bukti tertata': 'Evidence in order',
+  'Catatan, foto, dan hasil lapangan mengikuti pekerjaan.': 'Notes, photos, and field results stay with the job.',
+  'Kembali ke kantor': 'Back to the office',
+  'Perubahan yang menunggu dapat disinkronkan saat online.': 'Pending changes can sync when online.',
+  'Bahas alur workshopmu': 'Discuss your workflow',
+};
+
+type I18nContextValue = {
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  t: (source: string) => string;
+};
+
+const I18nContext = createContext<I18nContextValue | null>(null);
+const storageKey = 'alumiflow-landing-locale';
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocale] = useState<Locale>(() => {
+    try { return window.localStorage.getItem(storageKey) === 'en' ? 'en' : 'id'; }
+    catch { return 'id'; }
+  });
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    document.title = locale === 'en'
+      ? 'AlumiFlow — Glass & aluminium operations in one flow'
+      : 'AlumiFlow — Operasional usaha kaca & aluminium dalam satu flow';
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (meta) meta.content = locale === 'en'
+      ? 'AlumiFlow connects customer requests, surveys, quotes, jobs, installations, and payments in one flow. Book a demo.'
+      : 'AlumiFlow membantu usaha kaca dan aluminium mengelola alur dari customer, survei, penawaran, pekerjaan, instalasi, hingga pembayaran. Jadwalkan demo.';
+    const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]');
+    const ogDescription = document.querySelector<HTMLMetaElement>('meta[property="og:description"]');
+    if (ogTitle) ogTitle.content = locale === 'en'
+      ? 'AlumiFlow — Glass & aluminium operations in one flow'
+      : 'AlumiFlow — Operasional usaha kaca & aluminium dalam satu flow';
+    if (ogDescription) ogDescription.content = locale === 'en'
+      ? 'Connect customer requests, surveys, quotes, jobs, installations, and payments in one flow. Book a demo.'
+      : 'Hubungkan customer, survei, penawaran, pekerjaan, instalasi, dan pembayaran dalam satu alur. Jadwalkan demo AlumiFlow.';
+    try { window.localStorage.setItem(storageKey, locale); } catch { /* browsing can still continue */ }
+  }, [locale]);
+  const value = useMemo<I18nContextValue>(() => ({
+    locale,
+    setLocale,
+    t: (source: string) => locale === 'en' ? en[source] ?? source : source,
+  }), [locale]);
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}
+
+export function useLanguage() {
+  const value = useContext(I18nContext);
+  if (!value) throw new Error('LanguageProvider is required');
+  return value;
+}
