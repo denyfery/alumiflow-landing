@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 export type Locale = 'id' | 'en';
 
@@ -6,6 +6,7 @@ const en: Record<string, string> = {
   'Ceritanya': 'The story',
   'Cara kerja': 'How it works',
   'Untuk tim': 'For the team',
+  'Panduan': 'Guides',
   'Jadwalkan Demo': 'Book a Demo',
   'Buka menu': 'Open menu',
   'Tutup menu': 'Close menu',
@@ -178,40 +179,14 @@ const en: Record<string, string> = {
 
 type I18nContextValue = {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
   t: (source: string) => string;
 };
 
 const I18nContext = createContext<I18nContextValue | null>(null);
-const storageKey = 'alumiflow-landing-locale';
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>(() => {
-    try { return window.localStorage.getItem(storageKey) === 'en' ? 'en' : 'id'; }
-    catch { return 'id'; }
-  });
-  useEffect(() => {
-    document.documentElement.lang = locale;
-    document.title = locale === 'en'
-      ? 'AlumiFlow — Glass & aluminium operations in one flow'
-      : 'AlumiFlow — Operasional usaha kaca & aluminium dalam satu flow';
-    const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    if (meta) meta.content = locale === 'en'
-      ? 'AlumiFlow connects customer requests, surveys, quotes, jobs, installations, and payments in one flow. Book a demo.'
-      : 'AlumiFlow membantu usaha kaca dan aluminium mengelola alur dari customer, survei, penawaran, pekerjaan, instalasi, hingga pembayaran. Jadwalkan demo.';
-    const ogTitle = document.querySelector<HTMLMetaElement>('meta[property="og:title"]');
-    const ogDescription = document.querySelector<HTMLMetaElement>('meta[property="og:description"]');
-    if (ogTitle) ogTitle.content = locale === 'en'
-      ? 'AlumiFlow — Glass & aluminium operations in one flow'
-      : 'AlumiFlow — Operasional usaha kaca & aluminium dalam satu flow';
-    if (ogDescription) ogDescription.content = locale === 'en'
-      ? 'Connect customer requests, surveys, quotes, jobs, installations, and payments in one flow. Book a demo.'
-      : 'Hubungkan customer, survei, penawaran, pekerjaan, instalasi, dan pembayaran dalam satu alur. Jadwalkan demo AlumiFlow.';
-    try { window.localStorage.setItem(storageKey, locale); } catch { /* browsing can still continue */ }
-  }, [locale]);
+export function LanguageProvider({ children, locale }: { children: ReactNode; locale: Locale }) {
   const value = useMemo<I18nContextValue>(() => ({
     locale,
-    setLocale,
     t: (source: string) => locale === 'en' ? en[source] ?? source : source,
   }), [locale]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

@@ -52,7 +52,7 @@ function Tick() {
 function FlowBoard({ active, compact = false }: { active: number; compact?: boolean }) {
   const { t } = useLanguage();
   return <div className={'story-board ' + (compact ? 'story-board-compact' : '')}>
-    <div className="story-board-head"><span><img src="/assets/alumiflow-mark.png" alt="" /> AlumiFlow</span><small>{t('ILUSTRASI ALUR')}</small></div>
+    <div className="story-board-head"><span><img src="/assets/alumiflow-mark-ui.webp" width={96} height={96} alt="" /> AlumiFlow</span><small>{t('ILUSTRASI ALUR')}</small></div>
     <div className="story-board-content">
       <div className="story-board-label">{t('SATU PEKERJAAN · DARI AWAL SAMPAI AKHIR')}</div>
       <h3>{t('Langkah berikutnya')}<br /><span>{t('selalu terlihat.')}</span></h3>

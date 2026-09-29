@@ -173,9 +173,9 @@ button { cursor: pointer; }
 .hero-art { animation: float-soft 7s ease-in-out infinite; }
 .hero-art:hover, .hero-art:focus-within { animation-play-state: paused; }
 .lang-switch { display: inline-flex; align-items: center; gap: 2px; flex: 0 0 auto; padding: 3px; border: 1px solid #d9e4ee; border-radius: 9px; background: #f4f8fb; }
-.lang-switch button { min-width: 32px; min-height: 30px; border-radius: 6px; color: #59728b; font-size: .67rem; font-weight: 800; transition: background .2s, color .2s, box-shadow .2s; }
-.lang-switch button[aria-pressed="true"] { background: #092653; color: white; box-shadow: 0 3px 8px rgba(9,38,83,.18); }
-.lang-switch button:not([aria-pressed="true"]):hover { color: #0757a8; background: white; }
+.lang-switch a { display: grid; place-items: center; min-width: 32px; min-height: 30px; border-radius: 6px; color: #59728b; font-size: .67rem; font-weight: 800; text-decoration: none; transition: background .2s, color .2s, box-shadow .2s; }
+.lang-switch a[aria-current="page"] { background: #092653; color: white; box-shadow: 0 3px 8px rgba(9,38,83,.18); }
+.lang-switch a:not([aria-current="page"]):hover { color: #0757a8; background: white; }
 .hero-step { transition: background .25s, border-color .25s, transform .25s, box-shadow .25s; }
 .hero-step:hover { transform: translateX(3px); border-color: #8bdde9; box-shadow: 0 5px 17px rgba(6, 99, 142, .08); }
 .hero-step[aria-pressed="true"] { box-shadow: 0 7px 22px rgba(9, 134, 169, .11); }
@@ -233,7 +233,7 @@ button { cursor: pointer; }
 @media (max-width: 360px) {
   header .wrap { gap: .5rem; }
   header .wrap > a:first-child { width: 130px; }
-  .lang-switch button { min-width: 28px; }
+  .lang-switch a { min-width: 28px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

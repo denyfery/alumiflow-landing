@@ -15,9 +15,13 @@ function Check() {
 export default function HeroPreview() {
   const { t } = useLanguage();
   const [active, setActive] = useState(0);
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [playing, setPlaying] = useState(!reducedMotion);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const [hovered, setHovered] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (media.matches) { setReducedMotion(true); setPlaying(false); }
+  }, []);
   useEffect(() => {
     if (!playing || hovered || reducedMotion) return;
     const timer = window.setInterval(() => setActive(index => (index + 1) % steps.length), 4200);
@@ -32,7 +36,7 @@ export default function HeroPreview() {
     <div className="absolute -inset-19 rounded-full border border-white/6" aria-hidden="true" />
     <div className="absolute -top-5 right-3 z-10 flex items-center gap-2 rounded-lg bg-white px-3.5 py-2.5 text-[11px] font-bold text-[#092653] shadow-xl sm:right-0"><span className="grid h-5 w-5 place-items-center rounded bg-emerald-50 text-emerald-600"><Check /></span> {t('Informasi tetap terhubung')}</div>
     <div className="relative overflow-hidden rounded-[21px] border border-white/25 bg-white text-[#102b4c] shadow-[0_35px_90px_rgba(0,4,30,.35)] lg:rotate-[-2deg]">
-      <div className="flex h-15 items-center justify-between border-b border-[#e9eef4] px-5 sm:px-7"><div className="flex items-center gap-2 font-display text-sm font-extrabold"><img src="/assets/alumiflow-mark.png" className="h-7 w-7 object-contain" alt="" /> AlumiFlow</div><span className="rounded-full bg-[#e9f6fa] px-2.5 py-1 text-[10px] font-bold text-[#0757a8]">{t('Overview')}</span></div>
+      <div className="flex h-15 items-center justify-between border-b border-[#e9eef4] px-5 sm:px-7"><div className="flex items-center gap-2 font-display text-sm font-extrabold"><img src="/assets/alumiflow-mark-ui.webp" width={96} height={96} className="h-7 w-7 object-contain" alt="" /> AlumiFlow</div><span className="rounded-full bg-[#e9f6fa] px-2.5 py-1 text-[10px] font-bold text-[#0757a8]">{t('Overview')}</span></div>
       <div className="px-5 pt-7 pb-6 sm:px-8 sm:pt-8 sm:pb-8"><div className="mb-2 text-[10px] font-extrabold tracking-[.16em] text-[#0a93b7]">{t('SIMULASI SATU PEKERJAAN')}</div><h2 className="max-w-xs font-display text-[23px] leading-[1.3] font-extrabold tracking-[-.045em] sm:text-[27px]">{t('Satu pekerjaan, langkahnya terlihat jelas.')}</h2>
         <div className="mt-5 space-y-2.5">{steps.map((step, index) => {
           const done = index < active;

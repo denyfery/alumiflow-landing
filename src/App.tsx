@@ -4,8 +4,9 @@ import Story from './Story';
 import Viewpoints from './Viewpoints';
 import { useLanguage } from './i18n';
 import HeroPreview from './HeroPreview';
+import { guidePaths, guideSummaries, type GuideKey } from './guideLinks';
 
-const brandWordmark = '/assets/alumiflow-wordmark.png';
+const brandWordmark = '/assets/alumiflow-wordmark-ui.webp';
 
 function ArrowUpRight({ size = 18 }: { size?: number }) {
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 19 19 5M7 5h12v12" /></svg>;
@@ -25,21 +26,22 @@ const navLinks = [
   { href: '#cerita', label: 'Ceritanya' },
   { href: '#cara-kerja', label: 'Cara kerja' },
   { href: '#untuk-tim', label: 'Untuk tim' },
+  { href: '#panduan', label: 'Panduan' },
   { href: '#faq', label: 'FAQ' },
 ];
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const { locale, setLocale, t } = useLanguage();
+  const { locale, t } = useLanguage();
   return <header className="relative z-30 border-b border-slate-100 bg-white">
     <div className="wrap flex h-20 items-center justify-between gap-6 lg:h-22">
-      <a href="#top" className="block w-41 sm:w-47" aria-label={t('AlumiFlow, kembali ke atas')} onClick={() => setIsOpen(false)}><img src={brandWordmark} alt="AlumiFlow" className="block w-full" /></a>
+      <a href="#top" className="block w-41 sm:w-47" aria-label={t('AlumiFlow, kembali ke atas')} onClick={() => setIsOpen(false)}><img src={brandWordmark} alt="AlumiFlow" width={480} height={160} className="block w-full" /></a>
       <nav className="hidden items-center gap-8 lg:flex" aria-label={t('Navigasi utama')}>
         {navLinks.map(link => <a key={link.href} href={link.href} className="text-sm font-bold text-slate-600 transition hover:text-[#0757a8]">{t(link.label)}</a>)}
-        <div className="lang-switch" role="group" aria-label={t('Pilih bahasa')}><button type="button" lang="id" aria-pressed={locale === 'id'} onClick={() => setLocale('id')}>ID</button><button type="button" lang="en" aria-pressed={locale === 'en'} onClick={() => setLocale('en')}>EN</button></div>
+        <div className="lang-switch" role="group" aria-label={t('Pilih bahasa')}><a href="/" lang="id" hrefLang="id" aria-current={locale === 'id' ? 'page' : undefined}>ID</a><a href="/en/" lang="en" hrefLang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
         <a href="#demo" className="inline-flex items-center gap-5 rounded-lg bg-[#092653] px-5 py-3.5 text-sm font-bold text-white transition hover:bg-[#0757a8]">{t('Jadwalkan Demo')} <ArrowUpRight size={16} /></a>
       </nav>
-      <div className="flex items-center gap-2 lg:hidden"><div className="lang-switch" role="group" aria-label={t('Pilih bahasa')}><button type="button" lang="id" aria-pressed={locale === 'id'} onClick={() => setLocale('id')}>ID</button><button type="button" lang="en" aria-pressed={locale === 'en'} onClick={() => setLocale('en')}>EN</button></div><button type="button" className="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 text-[#092653]" aria-controls="mobile-nav" aria-expanded={isOpen} aria-label={t(isOpen ? 'Tutup menu' : 'Buka menu')} onClick={() => setIsOpen(!isOpen)}>
+      <div className="flex items-center gap-2 lg:hidden"><div className="lang-switch" role="group" aria-label={t('Pilih bahasa')}><a href="/" lang="id" hrefLang="id" aria-current={locale === 'id' ? 'page' : undefined}>ID</a><a href="/en/" lang="en" hrefLang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div><button type="button" className="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 text-[#092653]" aria-controls="mobile-nav" aria-expanded={isOpen} aria-label={t(isOpen ? 'Tutup menu' : 'Buka menu')} onClick={() => setIsOpen(!isOpen)}>
         <span className="flex w-5 flex-col gap-1.5"><span className="h-0.5 w-full bg-current" /><span className="h-0.5 w-full bg-current" /><span className="h-0.5 w-full bg-current" /></span>
       </button></div>
     </div>
@@ -110,6 +112,12 @@ function Features() {
   return <section id="fitur" className="section-space bg-white" aria-labelledby="features-title"><div className="wrap grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:gap-22"><div className="lg:sticky lg:top-12 lg:self-start" data-reveal><Eyebrow>{t('Bab 03 · Yang ikut terhubung')}</Eyebrow><h2 id="features-title" className="section-title">{t('Cerita yang utuh butuh detail yang tepat.')}</h2><p className="mt-5 max-w-[470px] leading-[1.75] text-slate-500">{t('Dari kebutuhan awal sampai tagihan, tiap bagian punya informasi yang dibutuhkan tim untuk melanjutkan pekerjaan.')}</p><a href="#demo" className="mt-6 inline-flex items-center gap-3 border-b border-[#0757a8] pb-1 text-sm font-bold text-[#0757a8] hover:text-[#0da9c8]">{t('Lihat dalam demo')} <ArrowUpRight size={16} /></a></div><div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">{features.map(feature => <article key={feature.title} className="feature-story border-t border-slate-200 pt-6" data-reveal><span className="mb-6 grid h-13 w-13 place-items-center rounded-xl bg-[#e9f8fc] text-[#0757a8]"><Icon kind={feature.icon} /></span><h3 className="font-display text-lg font-extrabold">{t(feature.title)}</h3><p className="mt-2 text-sm leading-[1.75] text-slate-500">{t(feature.body)}</p></article>)}</div></div></section>;
 }
 
+function Guides() {
+  const { locale } = useLanguage();
+  const isId = locale === 'id';
+  return <section id="panduan" className="section-space bg-[#edf5f9]" aria-labelledby="guides-title"><div className="wrap"><p className="text-xs font-extrabold uppercase tracking-[.16em] text-[#0757a8]">{isId ? 'Panduan untuk workshop' : 'Guides for workshops'}</p><h2 id="guides-title" className="section-title mt-4 max-w-[760px] text-[#092653]">{isId ? 'Jawaban praktis untuk pekerjaan sehari-hari.' : 'Practical answers for everyday work.'}</h2><p className="mt-5 max-w-[660px] leading-8 text-slate-600">{isId ? 'Mulai dari cara menyerahkan hasil survei sampai membaca progres order tanpa mengejar kabar satu per satu.' : 'From handing off a site survey to following order progress without chasing every update.'}</p><div className="mt-10 grid gap-5 md:grid-cols-2">{(['survey', 'progress'] as GuideKey[]).map((key, index) => { const guide = guideSummaries[key][locale]; const path = guidePaths[key][locale]; return <article key={key} className="rounded-2xl border border-[#dcebf2] bg-white p-7 shadow-[0_12px_35px_rgba(5,46,88,.05)] sm:p-9"><span className="text-xs font-extrabold text-[#079dbc]">0{index + 1} / {isId ? 'PANDUAN' : 'GUIDE'}</span><h3 className="font-display mt-4 text-2xl font-extrabold leading-snug text-[#102b4c]"><a href={path} className="hover:text-[#0757a8]">{guide.title}</a></h3><p className="mt-4 text-sm leading-7 text-slate-600">{guide.description}</p><a href={path} className="mt-6 inline-block text-sm font-extrabold text-[#0757a8] hover:underline">{isId ? 'Baca panduan ↗' : 'Read the guide ↗'}</a></article>; })}</div></div></section>;
+}
+
 const faqs = [
   ['Apakah AlumiFlow sudah bisa dicoba?', 'AlumiFlow sedang membuka pilot terbatas. Jadwalkan demo agar kami bisa memahami alur workshopmu dan menjelaskan proses uji coba yang tersedia.'],
   ['Apakah tim lapangan harus selalu online?', 'AlumiFlow Field mendukung pencatatan aktivitas tertentu ketika koneksi terbatas. Data yang menunggu dapat disinkronkan setelah koneksi kembali.'],
@@ -169,7 +177,7 @@ function Demo() {
 
 function Footer() {
   const { t } = useLanguage();
-  return <footer className="bg-[#f8fbfd]"><div className="wrap flex flex-col justify-between gap-7 py-11 sm:flex-row sm:items-center"><div><a href="#top" className="block w-44" aria-label={t('AlumiFlow, kembali ke atas')}><img src={brandWordmark} alt="AlumiFlow" /></a><p className="mt-2 max-w-62 text-sm leading-relaxed text-slate-500">{t('Operasional yang lebih jelas untuk usaha kaca dan aluminium.')}</p></div><a href="#top" className="text-sm font-bold text-[#0757a8] hover:underline">{t('Kembali ke atas ↑')}</a></div><div className="wrap flex flex-col justify-between gap-2 border-t border-slate-200 py-5 text-xs text-slate-400 sm:flex-row"><span>© {new Date().getFullYear()} AlumiFlow. {t('Semua hak dilindungi.')}</span><span>{t('Customer · Survey · Job · Payment')}</span></div></footer>;
+  return <footer className="bg-[#f8fbfd]"><div className="wrap flex flex-col justify-between gap-7 py-11 sm:flex-row sm:items-center"><div><a href="#top" className="block w-44" aria-label={t('AlumiFlow, kembali ke atas')}><img src={brandWordmark} alt="AlumiFlow" width={480} height={160} /></a><p className="mt-2 max-w-62 text-sm leading-relaxed text-slate-500">{t('Operasional yang lebih jelas untuk usaha kaca dan aluminium.')}</p></div><a href="#top" className="text-sm font-bold text-[#0757a8] hover:underline">{t('Kembali ke atas ↑')}</a></div><div className="wrap flex flex-col justify-between gap-2 border-t border-slate-200 py-5 text-xs text-slate-400 sm:flex-row"><span>© {new Date().getFullYear()} AlumiFlow. {t('Semua hak dilindungi.')}</span><span>{t('Customer · Survey · Job · Payment')}</span></div></footer>;
 }
 
 export default function App() {
@@ -183,5 +191,5 @@ export default function App() {
     targets.forEach(target => { target.classList.add('will-reveal'); observer.observe(target); });
     return () => observer.disconnect();
   }, []);
-  return <><a href="#main" className="skip-link">{t('Langsung ke konten')}</a><ReadingProgress /><div id="top"><Header /></div><main id="main"><Hero /><Problems /><Story /><Features /><Viewpoints /><Faq /><Demo /></main><Footer /></>;
+  return <><a href="#main" className="skip-link">{t('Langsung ke konten')}</a><ReadingProgress /><div id="top"><Header /></div><main id="main"><Hero /><Problems /><Story /><Features /><Viewpoints /><Guides /><Faq /><Demo /></main><Footer /></>;
 }
