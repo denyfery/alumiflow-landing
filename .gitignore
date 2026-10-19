@@ -5,4 +5,5 @@ dist/
 !.env.example
 *.local
 *.tar.gz
+*.tar.gz.sha256
 *.patch

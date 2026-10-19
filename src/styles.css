@@ -10,7 +10,7 @@
 }
 
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; }
+body { margin: 0; min-width: 280px; }
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
 ::selection { color: #061c43; background: #8cebf1; }

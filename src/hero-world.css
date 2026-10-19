@@ -1,0 +1,40 @@
+/* JS drives the scene; controls and labels remain stationary. */
+.hero-world-motion { position: absolute; inset: 0; }
+.hero-world-canvas { position: absolute; width: 100%; aspect-ratio: 1.5; top: 50%; transform: translateY(-50%); }
+.hero-world-canvas > .workshop-world { position: absolute; inset: 0; filter: drop-shadow(0 18px 20px #254b5310); }
+.hero-world .world-worker-arms { transform-box: fill-box; transform-origin: 50% 0%; }
+.hero-world .world-station { transition: filter .3s; }
+.hero-world[data-active-stage="0"] [data-world-station="0"],
+.hero-world[data-active-stage="1"] [data-world-station="1"],
+.hero-world[data-active-stage="2"] [data-world-station="2"],
+.hero-world[data-active-stage="3"] [data-world-station="3"],
+.hero-world[data-active-stage="4"] [data-world-station="4"] { filter: drop-shadow(0 2px 5px #12adbe42); }
+.hero-world-spot { position: absolute; z-index: 2; width: 44px; height: 44px; display: grid; place-items: center; transform: translate(-50%, -50%); border-radius: 50%; touch-action: manipulation; }
+.hero-world-spot > span { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid #238f94; border-radius: 50%; background: #f8fcf7; color: #24686d; box-shadow: 0 2px 10px #1c595328; font: 700 9px 'DM Sans', sans-serif; transition: background .2s, color .2s, box-shadow .2s; }
+.hero-world-spot:hover > span, .hero-world-spot:focus-visible > span { background: #d9f2e9; box-shadow: 0 0 0 5px #fff9, 0 3px 15px #258e8b33; }
+.hero-world-spot[aria-pressed="true"] > span { color: #fff; background: #167d85; border-color: #fff; box-shadow: 0 0 0 4px #138f9029, 0 3px 12px #25766c33; }
+.hero-world-detail { max-width: 266px; align-items: flex-start; pointer-events: none; }
+.hero-world-detail .pin-icon { flex-shrink: 0; font-size: 10px; font-weight: 700; }
+.hero-world-detail small { text-transform: uppercase; }
+.hero-world-detail p { max-width: 180px; margin-top: 6px; color: #547271; font-size: 10px; line-height: 1.6; }
+.hero-world-detail > i { flex-shrink: 0; margin-top: 6px; }
+.hero-world-controls { position: absolute; inset: auto 7% 0 13%; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #4e6e6e; font-size: 9px; }
+.hero-world-controls > button { display: flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 0 12px; border: 1px solid #d2e0d6; border-radius: 5px; color: #345e62; background: #f8fbf5e8; white-space: nowrap; transition: background .2s; }
+.hero-world-controls > button:hover { background: #e0efe5; }
+.hero-motion-note { font-size: 9px; }
+@media (max-width: 1023px) and (min-width: 768px) {
+  .hero-world-detail { max-width: 220px; right: -2%; top: 0; padding: 10px; }
+  .hero-world-detail p { max-width: 170px; font-size: 9px; }
+  .hero-world-controls { left: 9%; right: 0; bottom: -35px; font-size: 8px; }
+}
+@media (max-width: 767px) {
+  .hero-world-interactive { margin-top: 52px; margin-bottom: 45px; }
+  .hero-world-detail { max-width: 215px; top: 3%; right: 7%; padding: 10px 12px; }
+  .hero-world-detail p { display: none; }
+  .hero-world-spot > span { width: 23px; height: 23px; font-size: 8px; }
+  .hero-world-controls { left: 9%; right: 9%; bottom: -30px; font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-world-motion { transform: none !important; }
+  .hero-world .world-station { filter: none !important; }
+}

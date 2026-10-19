@@ -1,9 +1,9 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { DEMO_WHATSAPP_NUMBER } from './config';
-import Story from './Story';
+import ScrollWorld from './ScrollWorld';
 import Viewpoints from './Viewpoints';
 import { useLanguage } from './i18n';
-import HeroPreview from './HeroPreview';
+import HeroWorld from './HeroWorld';
 import { guidePaths, guideSummaries, type GuideKey } from './guideLinks';
 
 const brandWordmark = '/assets/alumiflow-wordmark-ui.webp';
@@ -23,8 +23,8 @@ function Icon({ kind }: { kind: 'users' | 'measure' | 'document' | 'tools' | 'bo
 }
 
 const navLinks = [
-  { href: '#cerita', label: 'Ceritanya' },
-  { href: '#cara-kerja', label: 'Cara kerja' },
+  { href: '#cara-kerja', label: 'Jelajahi flow' },
+  { href: '#fitur', label: 'Fitur' },
   { href: '#untuk-tim', label: 'Untuk tim' },
   { href: '#panduan', label: 'Panduan' },
   { href: '#faq', label: 'FAQ' },
@@ -33,9 +33,15 @@ const navLinks = [
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { locale, t } = useLanguage();
-  return <header className="relative z-30 border-b border-slate-100 bg-white">
+  useEffect(() => {
+    if (!isOpen) return;
+    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setIsOpen(false); };
+    window.addEventListener('keydown', close);
+    return () => window.removeEventListener('keydown', close);
+  }, [isOpen]);
+  return <header className="landing-header z-30 border-b border-slate-100 bg-white">
     <div className="wrap flex h-20 items-center justify-between gap-6 lg:h-22">
-      <a href="#top" className="block w-41 sm:w-47" aria-label={t('AlumiFlow, kembali ke atas')} onClick={() => setIsOpen(false)}><img src={brandWordmark} alt="AlumiFlow" width={480} height={160} className="block w-full" /></a>
+      <a href="#top" className="brand-link" aria-label={t('AlumiFlow, kembali ke atas')} onClick={() => setIsOpen(false)}><img src={brandWordmark} alt="AlumiFlow" width={480} height={160} className="block w-full" /></a>
       <nav className="hidden items-center gap-8 lg:flex" aria-label={t('Navigasi utama')}>
         {navLinks.map(link => <a key={link.href} href={link.href} className="text-sm font-bold text-slate-600 transition hover:text-[#0757a8]">{t(link.label)}</a>)}
         <div className="lang-switch" role="group" aria-label={t('Pilih bahasa')}><a href="/" lang="id" hrefLang="id" aria-current={locale === 'id' ? 'page' : undefined}>ID</a><a href="/en/" lang="en" hrefLang="en" aria-current={locale === 'en' ? 'page' : undefined}>EN</a></div>
@@ -80,11 +86,27 @@ function PrimaryLink({ children, href = '#demo', light = false }: { children: Re
 }
 
 function Hero() {
-  const { t } = useLanguage();
-  return <section className="hero-bg relative overflow-hidden bg-[#061c43] text-white" aria-labelledby="hero-title"><div className="wrap relative grid items-center gap-16 pt-18 pb-24 lg:min-h-[690px] lg:grid-cols-[.98fr_1.02fr] lg:gap-12 lg:py-21">
-    <div className="relative z-10 max-w-[640px]"><Eyebrow light>{t('Pilot terbatas untuk workshop kaca & aluminium')}</Eyebrow><h1 id="hero-title" className="font-display text-[clamp(2.85rem,5.2vw,5rem)] leading-[1.075] font-extrabold tracking-[-.065em]">{t('Satu order.')} <span className="text-[#72dfed]">{t('Banyak langkah.')}</span> {t('Satu flow.')}</h1><p className="mt-6 max-w-[550px] text-base leading-[1.8] text-[#c2d7e9] sm:text-lg">{t('Dari pesan pertama pelanggan sampai pembayaran selesai, AlumiFlow membantu tim kantor dan lapangan mengikuti pekerjaan yang sama.')}</p><div className="mt-8 flex flex-wrap items-center gap-6"><PrimaryLink href="#cara-kerja">{t('Lihat alurnya')}</PrimaryLink><a href="#demo" className="inline-flex items-center gap-3 border-b border-white/50 pb-1 text-sm font-bold text-white transition hover:border-[#72dfed] hover:text-[#72dfed]">{t('Jadwalkan Demo')} <span aria-hidden="true">↗</span></a></div><div className="mt-11 flex items-center gap-3 text-xs text-[#9bb9d2]"><span className="h-px w-7 bg-[#5bcfe3]" />{t('Pilih tahap untuk melihat alurnya')}</div></div>
-    <div className="relative z-10"><HeroPreview /></div>
-  </div></section>;
+  const { t, locale } = useLanguage();
+  const isId = locale === 'id';
+  return <section className="world-hero" aria-labelledby="hero-title">
+    <div className="hero-coordinate" aria-hidden="true">AF / CONNECTED WORKSHOP SYSTEM</div>
+    <div className="wrap hero-layout">
+      <div className="hero-message">
+        <a className="pilot-pill" href="#demo"><span />{isId ? 'PILOT TERBATAS DIBUKA' : 'LIMITED PILOT IS OPEN'}<ArrowUpRight size={13} /></a>
+        <h1 id="hero-title">{t('Satu order.')}<br />{t('Banyak langkah.')}<br /><span>{t('Satu flow.')}<svg viewBox="0 0 350 16" aria-hidden="true"><path d="M3 12Q160-3 346 8" /></svg></span></h1>
+        <p>{isId ? 'Seluruh dunia workshop, terhubung. Dari pelanggan pertama menyapa sampai kaca terpasang dan pembayaran selesai.' : 'Your whole workshop, connected. From the first customer hello to installed glass and the final payment.'}</p>
+        <div className="hero-actions"><PrimaryLink href="#cara-kerja">{isId ? 'Jelajahi flow-nya' : 'Explore the flow'}<span className="sr-only">{isId ? 'dengan scroll' : 'with scroll'}</span></PrimaryLink><a href="#demo" className="hero-demo">{t('Jadwalkan Demo')}<ArrowUpRight size={16} /></a></div>
+        <div className="hero-audience"><span className="audience-icon"><Icon kind="tools" /></span><span>{isId ? 'Dibuat untuk usaha' : 'Built for'}<strong>{isId ? 'kaca & aluminium.' : 'glass & aluminium businesses.'}</strong></span></div>
+      </div>
+      <HeroWorld />
+    </div>
+    <div className="hero-foot wrap"><a href="#cara-kerja"><span className="scroll-symbol" aria-hidden="true"><i /></span>{isId ? 'Scroll. Ikuti satu pekerjaan sampai tuntas.' : 'Scroll. Follow one job all the way.'}<span aria-hidden="true">↓</span></a><span className="hero-foot-note">{isId ? 'DARI KANTOR KE LAPANGAN. DAN KEMBALI LAGI.' : 'FROM OFFICE TO FIELD. AND BACK AGAIN.'}</span></div>
+  </section>;
+}
+
+function FlowStrip() {
+  const { locale } = useLanguage();
+  return <div className="flow-strip"><div className="wrap"><span>{locale === 'id' ? 'SATU ALUR YANG UTUH' : 'ONE COMPLETE FLOW'}</span><div>{['Customer', 'Survey', 'Quotation', 'Job', 'Installation', 'Payment'].map((label, index) => <span key={label}>{index > 0 && <i aria-hidden="true">↗</i>}{label}</span>)}</div></div></div>;
 }
 
 const pains = [
@@ -95,7 +117,7 @@ const pains = [
 
 function Problems() {
   const { t } = useLanguage();
-  return <section id="cerita" className="section-space bg-white" aria-labelledby="problem-title"><div className="wrap grid gap-13 lg:grid-cols-[1fr_1fr] lg:gap-24"><div data-reveal><Eyebrow>{t('Bab 01 · Yang sering terjadi')}</Eyebrow><h2 id="problem-title" className="section-title max-w-[540px]">{t('Order masuk. Lalu ceritanya terpecah.')}</h2><p className="mt-5 max-w-[480px] leading-[1.75] text-slate-500">{t('Satu pekerjaan melewati banyak tangan. Saat informasinya tercecer, setiap orang perlu menyusun ulang apa yang sebenarnya terjadi.')}</p><div className="problem-bridge"><span aria-hidden="true">↘</span> {t('Bagaimana kalau satu pekerjaan punya alur yang bisa diikuti bersama?')}</div></div><div className="divide-y divide-slate-200 border-t border-slate-200">{pains.map(([number, title, body]) => <div data-reveal key={number} className="grid grid-cols-[39px_1fr] gap-4 py-6 sm:py-7"><span className="pt-1 text-xs font-extrabold text-[#14abc7]">{number}</span><div><h3 className="font-display text-lg font-extrabold tracking-tight">{t(title)}</h3><p className="mt-2 text-sm leading-[1.75] text-slate-500">{t(body)}</p></div></div>)}</div></div></section>;
+  return <section id="cerita" className="section-space bg-white" aria-labelledby="problem-title"><div className="wrap grid gap-13 lg:grid-cols-[1fr_1fr] lg:gap-24"><div data-reveal><Eyebrow>{t('Yang sering terjadi')}</Eyebrow><h2 id="problem-title" className="section-title max-w-[540px]">{t('Order masuk. Lalu ceritanya terpecah.')}</h2><p className="mt-5 max-w-[480px] leading-[1.75] text-slate-500">{t('Satu pekerjaan melewati banyak tangan. Saat informasinya tercecer, setiap orang perlu menyusun ulang apa yang sebenarnya terjadi.')}</p><div className="problem-bridge"><span aria-hidden="true">↘</span> {t('Bagaimana kalau satu pekerjaan punya alur yang bisa diikuti bersama?')}</div></div><div className="divide-y divide-slate-200 border-t border-slate-200">{pains.map(([number, title, body]) => <div data-reveal key={number} className="grid grid-cols-[39px_1fr] gap-4 py-6 sm:py-7"><span className="pt-1 text-xs font-extrabold text-[#14abc7]">{number}</span><div><h3 className="font-display text-lg font-extrabold tracking-tight">{t(title)}</h3><p className="mt-2 text-sm leading-[1.75] text-slate-500">{t(body)}</p></div></div>)}</div></div></section>;
 }
 
 const features: { title: string; body: string; icon: Parameters<typeof Icon>[0]['kind'] }[] = [
@@ -109,7 +131,7 @@ const features: { title: string; body: string; icon: Parameters<typeof Icon>[0][
 
 function Features() {
   const { t } = useLanguage();
-  return <section id="fitur" className="section-space bg-white" aria-labelledby="features-title"><div className="wrap grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:gap-22"><div className="lg:sticky lg:top-12 lg:self-start" data-reveal><Eyebrow>{t('Bab 03 · Yang ikut terhubung')}</Eyebrow><h2 id="features-title" className="section-title">{t('Cerita yang utuh butuh detail yang tepat.')}</h2><p className="mt-5 max-w-[470px] leading-[1.75] text-slate-500">{t('Dari kebutuhan awal sampai tagihan, tiap bagian punya informasi yang dibutuhkan tim untuk melanjutkan pekerjaan.')}</p><a href="#demo" className="mt-6 inline-flex items-center gap-3 border-b border-[#0757a8] pb-1 text-sm font-bold text-[#0757a8] hover:text-[#0da9c8]">{t('Lihat dalam demo')} <ArrowUpRight size={16} /></a></div><div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">{features.map(feature => <article key={feature.title} className="feature-story border-t border-slate-200 pt-6" data-reveal><span className="mb-6 grid h-13 w-13 place-items-center rounded-xl bg-[#e9f8fc] text-[#0757a8]"><Icon kind={feature.icon} /></span><h3 className="font-display text-lg font-extrabold">{t(feature.title)}</h3><p className="mt-2 text-sm leading-[1.75] text-slate-500">{t(feature.body)}</p></article>)}</div></div></section>;
+  return <section id="fitur" className="section-space bg-white" aria-labelledby="features-title"><div className="wrap grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:gap-22"><div className="lg:sticky lg:top-12 lg:self-start" data-reveal><Eyebrow>{t('Yang ikut terhubung')}</Eyebrow><h2 id="features-title" className="section-title">{t('Cerita yang utuh butuh detail yang tepat.')}</h2><p className="mt-5 max-w-[470px] leading-[1.75] text-slate-500">{t('Dari kebutuhan awal sampai tagihan, tiap bagian punya informasi yang dibutuhkan tim untuk melanjutkan pekerjaan.')}</p><a href="#demo" className="mt-6 inline-flex items-center gap-3 border-b border-[#0757a8] pb-1 text-sm font-bold text-[#0757a8] hover:text-[#0da9c8]">{t('Lihat dalam demo')} <ArrowUpRight size={16} /></a></div><div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">{features.map(feature => <article key={feature.title} className="feature-story border-t border-slate-200 pt-6" data-reveal><span className="mb-6 grid h-13 w-13 place-items-center rounded-xl bg-[#e9f8fc] text-[#0757a8]"><Icon kind={feature.icon} /></span><h3 className="font-display text-lg font-extrabold">{t(feature.title)}</h3><p className="mt-2 text-sm leading-[1.75] text-slate-500">{t(feature.body)}</p></article>)}</div></div></section>;
 }
 
 function Guides() {
@@ -191,5 +213,5 @@ export default function App() {
     targets.forEach(target => { target.classList.add('will-reveal'); observer.observe(target); });
     return () => observer.disconnect();
   }, []);
-  return <><a href="#main" className="skip-link">{t('Langsung ke konten')}</a><ReadingProgress /><div id="top"><Header /></div><main id="main"><Hero /><Problems /><Story /><Features /><Viewpoints /><Guides /><Faq /><Demo /></main><Footer /></>;
+  return <div id="top" className="landing-page"><a href="#main" className="skip-link">{t('Langsung ke konten')}</a><ReadingProgress /><Header /><main id="main"><Hero /><FlowStrip /><Problems /><ScrollWorld /><Features /><Viewpoints /><Guides /><Faq /><Demo /></main><Footer /></div>;
 }

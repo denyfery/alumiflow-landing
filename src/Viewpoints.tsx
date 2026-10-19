@@ -34,7 +34,7 @@ export default function Viewpoints() {
   return <section id="untuk-tim" className="view-section section-space" aria-labelledby="view-title">
     <div className="wrap">
       <div className="view-heading">
-        <div><span className="view-eyebrow">{t('BAB 04 · DARI DUA SISI')}</span><h2 id="view-title" className="section-title">{t('Satu flow.')}<br />{t('Dua cara mengalaminya.')}</h2></div>
+        <div><span className="view-eyebrow">{t('Dari dua sisi')}</span><h2 id="view-title" className="section-title">{t('Satu flow.')}<br />{t('Dua cara mengalaminya.')}</h2></div>
         <div className="view-switch" role="group" aria-label={t('Pilih sudut pandang')}>
           <button type="button" aria-pressed={view === 'owner'} className={view === 'owner' ? 'active' : ''} onClick={() => setView('owner')}>{t('Owner & kantor')}</button>
           <button type="button" aria-pressed={view === 'field'} className={view === 'field' ? 'active' : ''} onClick={() => setView('field')}>{t('Tim lapangan')}</button>

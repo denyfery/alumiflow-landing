@@ -1,5 +1,7 @@
 # Rilis landing AlumiFlow ke alumiflow.com
 
+Untuk **update desain pada situs yang sudah live**, gunakan [panduan update 19 Oktober 2026](UPDATE_DESIGN_20261019.md). Dokumen ini menjelaskan pemasangan/cutover awal.
+
 Target: landing marketing di `alumiflow.com`, aplikasi produksi tetap di `app.alumiflow.com`, pilot tetap di `pilot.alumiflow.com`. Proses demo dan billing masih manual; halaman ini tidak melakukan pembayaran atau membuat akun.
 
 ## 1. Siapkan konten dan build di laptop
@@ -42,7 +44,7 @@ Contoh ini memakai user deploy dan VPS produksi AlumiFlow. Sesuaikan bila user, 
 Dari laptop:
 
 ```bash
-scp alumiflow-landing-dist.tar.gz alumiflow-deploy@103.89.4.146:/tmp/
+scp -o IdentitiesOnly=yes -i "$HOME/.ssh/alumiflow_github_actions_prod" alumiflow-landing-dist.tar.gz alumiflow-deploy@103.89.4.146:/tmp/
 ```
 
 Di VPS:
@@ -56,14 +58,17 @@ test -f "/var/www/alumiflow-landing/releases/$release_stamp/index.html"
 sudo ln -sfn "/var/www/alumiflow-landing/releases/$release_stamp" /var/www/alumiflow-landing/current
 ```
 
-Jika hak akses user deploy tidak mengizinkan ekstraksi, jaJika hak akses user deploy tidak mengizinkan ekstraksi, jalankan `sudo tar -xzf ...` lalu set agar file build bisa dibaca oleh web server. Pada vhost HTTPS yang **khusus** melayani `alumiflow.com`, gunakan root `/var/www/alumiflow-landing/current`. Build menyediakan `/index.html` dan `/en/index.html`; URL lain sebaiknya 404:
+Jika hak akses user deploy tidak mengizinkan ekstraksi, jalankan `sudo tar -xzf ...` lalu set agar file build bisa dibaca oleh web server. Pada vhost HTTPS yang **khusus** melayani `alumiflow.com`, gunakan root `/var/www/alumiflow-landing/current`. Build menyediakan beranda dan dua panduan dalam ID/EN; URL yang tidak tersedia sebaiknya 404:
 
 ```nginx
 root /var/www/alumiflow-landing/current;
 index index.html;
 location / {
     try_files $uri $uri/ =404;
- `pilot.alumiflow.com`. Pertahankan TLS dan redirect HTTP→HTTPS yang ada. Bila root domain sebelumnya dipakai Laravel, ubah hanya vhost root setelah memastikan akses aplikasi produksinya memang lewat subdomain `app`.
+}
+```
+
+Pertahankan vhost `app.alumiflow.com` dan `pilot.alumiflow.com`, TLS, serta redirect HTTP→HTTPS yang ada. Bila root domain sebelumnya dipakai Laravel, ubah hanya vhost root setelah memastikan akses aplikasi produksinya memang lewat subdomain `app`.
 
 Validasi dan muat ulang konfigurasi:
 

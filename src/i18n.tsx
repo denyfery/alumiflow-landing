@@ -3,6 +3,11 @@ import { createContext, useContext, useMemo, type ReactNode } from 'react';
 export type Locale = 'id' | 'en';
 
 const en: Record<string, string> = {
+  'Jelajahi flow': 'Explore the flow',
+  'Fitur': 'Features',
+  'Yang sering terjadi': 'The familiar problem',
+  'Yang ikut terhubung': 'The details that connect',
+  'Dari dua sisi': 'Two perspectives',
   'Ceritanya': 'The story',
   'Cara kerja': 'How it works',
   'Untuk tim': 'For the team',

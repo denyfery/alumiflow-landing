@@ -4,13 +4,16 @@ Prototipe landing page untuk pilot terbatas AlumiFlow. Halaman mengajak pengunju
 
 ## Interaksi cerita
 
-- `src/Story.tsx`: empat bab yang mengikuti scroll. Pada desktop, papan pekerjaan tetap terlihat dan memperbarui tahap aktif; tombol bab dapat melompat ke tahap tertentu. Pada mobile, setiap bab menampilkan papan ringkasnya sendiri.
-- `src/HeroPreview.tsx`: simulasi empat tahap di pembuka. Tahap berpindah otomatis saat halaman terbuka, bisa dipilih manual, serta tersedia tombol jeda/putar. Preferensi reduced motion mematikan pemutaran otomatis.
+- `src/WorkshopWorld.tsx`: satu dunia workshop isometrik berbasis SVG, dipakai bersama oleh hero dan perjalanan scroll. Ilustrasi mencakup kantor, lokasi survei, workshop produksi, instalasi, dan pembayaran.
+- `src/HeroWorld.tsx`: ilustrasi hero interaktif dengan lima penanda area, panel informasi ID/EN, parallax mouse ringan, serta animasi JS melalui Web Animations API untuk jalur order, penanda order, mobil, dan aktivitas pekerja. Tombol jeda/putar mengontrol gerakan; reduced motion, tab tersembunyi, dan area di luar viewport menghentikan animasi. `src/hero-world.css` mengatur penanda dan kontrolnya.
+- `src/ScrollWorld.tsx`: lima tahap dengan kamera yang dikendalikan scroll. Kamera menjauh di antara tujuan dan mendekat di tiap tujuan; tombol tahap bisa dipakai untuk maju atau kembali. Peredaman gerakan berbasis waktu menjaga respons pada frame rate yang berbeda.
+- Preview ini mengikuti pilihan pengguna: **fly-through, layout responsif, tanpa render berbayar**. Adegan merupakan ilustrasi vektor, bukan video hasil render Higgsfield/Monid. Tidak ada video mobile 9:16 atau render AI yang dijalankan.
+- Preferensi reduced motion serta layar dengan tinggi 600px atau kurang menggunakan tampilan statis yang dapat dijelajahi lewat tombol tahap. Tanpa JavaScript, penjelasan kelima tahap tetap tersedia.
 - `src/Viewpoints.tsx`: pilihan sudut pandang owner/kantor dan tim lapangan.
 - `src/App.tsx`: navigasi, progress membaca, section masalah, fitur, FAQ, dan form demo.
 - `src/i18n.tsx`: terjemahan ID/EN untuk seluruh konten dan teks form. Bahasa Indonesia ada di `/`, Inggris di `/en/`; pemilih bahasa memakai tautan antar-URL.
 - `scripts/prerender.mjs`: menghasilkan HTML awal lengkap untuk kedua bahasa, termasuk metadata masing-masing. React tetap menghidupkan interaksi setelah halaman dimuat.
-- `src/styles.css`: responsif dan menghormati preferensi *reduced motion*. Visual papan pekerjaan adalah ilustrasi, bukan data pelanggan.
+- `src/styles.css`: gaya dasar. `src/landing.css`: token brand bersama, tema landing, hero, kamera scroll, dan penyesuaian responsif. `src/guides.css`: tema artikel panduan yang mengikuti palet, header, kartu, dan tipografi landing baru, dengan daftar langkah serta tautan antar-panduan. Visual dunia workshop adalah ilustrasi, bukan data pelanggan.
 
 ## Jalankan
 
@@ -37,6 +40,7 @@ Untuk rilis publik jalankan `npm run build:launch`; perintah ini berhenti jika n
 Build sekarang menghasilkan `dist/index.html`, `dist/en/index.html`, `dist/robots.txt`, dan `dist/sitemap.xml`. Jangan mengunggah `index.html` sumber proyek; unggah **isi `dist/`**. Jika memperbarui proyek yang sudah live, pertahankan nomor asli di `src/config.ts` pada laptop sebelum build.
 
 Panduan cutover domain dan pemeriksaan setelah rilis ada di [`docs/LAUNCH_ALUMIFLOW_COM.md`](docs/LAUNCH_ALUMIFLOW_COM.md).
+Untuk update situs yang sudah live dengan desain terbaru, gunakan [`docs/UPDATE_DESIGN_20261019.md`](docs/UPDATE_DESIGN_20261019.md): paket rilis, upload VPS, pergantian symlink, verifikasi, dan rollback.
 Langkah khusus SEO dan Search Console ada di [`docs/SEO_RELEASE.md`](docs/SEO_RELEASE.md).
 
 ## Perpindahan ke Laravel

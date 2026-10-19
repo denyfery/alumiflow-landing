@@ -4,6 +4,9 @@ import App from './App';
 import { findGuide } from './guideLinks';
 import { LanguageProvider } from './i18n';
 import './styles.css';
+import './landing.css';
+import './hero-world.css';
+import './guides.css';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Root element not found');
